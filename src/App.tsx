@@ -19,12 +19,23 @@ function RadialTracker({ setInterruptions }: RadialTrackerProps) {
   const circumference = 2 * Math.PI * 45;
   const strokeDashoffset = circumference - (progress / 100) * circumference;
 
+  const formatTime = (secs: number) => {
+    const hrs = Math.floor(secs / 3600)
+      .toString()
+      .padStart(2, "0");
+    const mins = Math.floor((secs % 3600) / 60)
+      .toString()
+      .padStart(2, "0");
+    const seconds = (secs % 60).toString().padStart(2, "0");
+    return `${hrs}:${mins}:${seconds}`;
+  };
+
   useEffect(() => {
     let interval: ReturnType<typeof setInterval>;
-    if (isRunning && progress < 1000) {
+    if (isRunning && progress < 1260) {
       interval = setInterval(() => {
-        setProgress((prev) => (prev < 1000 ? prev + 1 : 1000));
         setElapsed((prev) => prev + 1); // tick time
+        setProgress(() => Math.floor(((elapsed + 1) / (1000 * 60)) * 100));
       }, 1000); // each tick = 100ms
     }
     return () => clearInterval(interval);
@@ -39,17 +50,6 @@ function RadialTracker({ setInterruptions }: RadialTrackerProps) {
     }
     return () => clearInterval(interval);
   }, [isInterrupted]);
-
-  const formatTime = (secs: number) => {
-    const hrs = Math.floor(secs / 3600)
-      .toString()
-      .padStart(2, "0");
-    const mins = Math.floor((secs % 3600) / 60)
-      .toString()
-      .padStart(2, "0");
-    const seconds = (secs % 60).toString().padStart(2, "0");
-    return `${hrs}:${mins}:${seconds}`;
-  };
 
   return (
     <>
@@ -121,7 +121,7 @@ function RadialTracker({ setInterruptions }: RadialTrackerProps) {
           }}
           className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
         >
-          {progress === 0
+          {elapsed === 0
             ? "Start Timer"
             : isRunning
             ? "Pause Timer"
