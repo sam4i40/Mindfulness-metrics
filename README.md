@@ -16,7 +16,7 @@ React · TypeScript · Tailwind CSS
 ## 📦 Installation
 
 ```bash
-git clone https://github.com/your-username/mindful-metrics.git
+git clone https://github.com/sam4i40/mindful-metrics.git
 cd mindful-metrics
 npm install
 npm run dev
